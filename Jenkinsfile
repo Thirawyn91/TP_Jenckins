@@ -1,37 +1,7 @@
 node {
-    def app
-
-    stage('Clone repository') {
-        /* Let's make sure we have the repository cloned to our workspace */
-
-        checkout scm
-    }
-
-    stage('Build image') {
-        /* This builds the actual image; synonymous to
-         * docker build on the command line */
-
-        sh "docker -H tcp://0.0.0.0:4243 build -t "apache:Dockerfile" .
-    }
-
-    stage('Test image') {
-        /* Ideally, we would run a test framework against our image.
-         * For this example, we're using a Volkswagen-type approach ;-) */
-
-        app.inside {
-            sh 'echo "Tests passed"'
-        }
-    }
-
-    stage('Push image') {
-        /* Finally, we'll push the image with two tags:
-         * First, the incremental build number from Jenkins
-         * Second, the 'latest' tag.
-         * Pushing multiple tags is cheap, as all the layers are reused.
-         * docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-         *    app.push("${env.BUILD_NUMBER}")
-         *    app.push("latest") */
-        sh "docker -H tcp://0.0.0.0:4243 run --name apache -d -p 8080:80 apache"
-        }
-    }
+checkout scm
+def testImage = docker.build("test-image", ".")
+testImage.inside {
+sh 'make test'
+}
 }
