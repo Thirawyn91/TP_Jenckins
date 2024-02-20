@@ -7,7 +7,7 @@ node {
           stage('Deploy'){
       agent any
       steps{
-sh sudo docker build . -t webimage
+sh docker build . -t webimage
       }
  }
   }
