@@ -1,7 +1,4 @@
 node {
-checkout scm
-def testImage = docker.build("test-image", ".")
-testImage.inside {
-sh 'make test'
-}
-}
+sudo docker build -t webimage:$BUILD_NUMBER .
+sudo docker container run -itd --name webserver$BUILD_NUMBER -p 8080 webimage:$BUILD_NUMBER'''
+      }
