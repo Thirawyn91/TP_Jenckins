@@ -7,8 +7,7 @@ node {
           stage('Deploy'){
       agent any
       steps{
-sh sudo docker build . -t "webimage:$BUILD_NUMBER"
-sh docker container run -itd --name webserver$BUILD_NUMBER -p 8080 "webimage:$BUILD_NUMBER"
+sh sudo docker build . -t webimage
       }
  }
   }
